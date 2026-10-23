@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="12dp">
+
+    <!-- Aqui definiremos el aspecto visual de cada tarjeta o elemento individual d ela lista
+     foto a la izquierda, el nombre de animal al lado y un icono se sonido si lo tiene-->
+
+
+    <!-- imagen del animal -->
+    <ImageView
+        android:id="@+id/imgAnimalFila"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_launcher_background" />
+
+    <!-- nombre del animal -->
+    <TextView
+        android:id="@+id/txtNombreFila"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_weight="1"
+        android:text="Nombre Animal"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- icono indicador de sonido -->
+    <TextView
+        android:id="@+id/txtIconoSonido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🔊"
+        android:textSize="24sp" />
+
+</LinearLayout>

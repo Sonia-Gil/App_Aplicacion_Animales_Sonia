@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/txtTituloAgregar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Añadir Nuevo Animal"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp" />
+
+    <!-- nombre del animal, salta al campo categoría -->
+    <EditText
+        android:id="@+id/editNombreAnimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre del animal (ej: Perro)"
+        android:inputType="text"
+        android:maxLines="1"
+        android:imeOptions="actionNext" />
+
+    <!-- categoría del animal, salta al campo imagen -->
+    <EditText
+        android:id="@+id/editCategoriaAnimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Categoría (Mamíferos, Aves o Peces)"
+        android:inputType="text"
+        android:maxLines="1"
+        android:imeOptions="actionNext" />
+
+    <!-- imagen del proyecto Salta al campo sonido -->
+    <EditText
+        android:id="@+id/editImagenAnimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Imagen del proyecto (ej: leon, loro, pato)"
+        android:inputType="text"
+        android:maxLines="1"
+        android:imeOptions="actionNext" />
+
+    <!-- botón para elegir foto de la galería -->
+    <Button
+        android:id="@+id/btnSeleccionarFoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="O elegir foto de la galería" />
+
+    <!-- vista previa de la foto -->
+    <ImageView
+        android:id="@+id/imgVistaPrevia"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <!-- nombre del sonido, cierra el teclado al terminar -->
+    <EditText
+        android:id="@+id/editSonidoAnimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Sonido opcional (ej: sonido_pato)"
+        android:inputType="text"
+        android:maxLines="1"
+        android:imeOptions="actionDone" />
+
+    <Button
+        android:id="@+id/btnSeleccionarAudio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar audio del dispositivo"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/txtAudioSeleccionado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🎵 Audio cargado con éxito"
+        android:textColor="#2E7D32"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp" />
+
+    <!-- botón de guardar -->
+    <Button
+        android:id="@+id/btnGuardarAnimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Guardar Animal"
+        android:backgroundTint="#4CAF50"
+        android:padding="12dp" />
+
+    <!-- botón de volver -->
+    <Button
+        android:id="@+id/btnVolverAgregar"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="← Volver a la Lista"
+        android:backgroundTint="#757575"
+        android:padding="12dp" />
+
+</LinearLayout>
