@@ -2,22 +2,28 @@ package com.example.app_aplicacion_animales_sonia
 
 import android.os.Bundle
 import android.widget.TextView
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.content.Intent
 import android.widget.Button
 import android.widget.ImageView
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
-class ListaAnimalesActivity : ComponentActivity() {
+class ListaAnimalesActivity : AppCompatActivity() {
 
     private lateinit var adapter: AnimalAdapter
+    private lateinit var dao: AnimalesDAO // Instancia de Room
     private var categoriaSeleccionada: String = "Mamíferos"
 
     //punto de entrada
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_animales)
+
+        // AQUÍ INICIALIZAS LA BASE DE DATOS:
+        dao = AppDatabase.obtener(this).animalesDao()
 
         val txtTitulo = findViewById<TextView>(R.id.txtTituloCategoria)
         val imgHeader = findViewById<ImageView>(R.id.imgCategoriaHeader)
@@ -40,6 +46,12 @@ class ListaAnimalesActivity : ComponentActivity() {
         //3.cofiguramos el RecyclerView que es en lista vertical
         rvAnimales.layoutManager = LinearLayoutManager(this)
 
+        // Inicializamos el adaptador pasándole la función de borrado para Room
+        adapter = AnimalAdapter(emptyList()) { animalABorrar ->
+            borrarAnimal(animalABorrar)
+        }
+        rvAnimales.adapter = adapter
+
         //4. Botón Volver al menú principal
         btnVolver.setOnClickListener {
             finish()
@@ -52,19 +64,37 @@ class ListaAnimalesActivity : ComponentActivity() {
             startActivity(intent)
         }
     }
+
     //se ejecuta cada vez que volvemos a esta pantalla
     override fun onResume() {
         super.onResume()
-        val rvAnimales = findViewById<RecyclerView>(R.id.rvAnimales)
+        cargarDatosDesdeRoom()
 
-        //filtramos la lista completa de almacenAnimales comparando la categoría seleccionada
-        val animalesFiltrados = AlmacenAnimales.listaAnimales.filter { animal ->
-            animal.categoria.trim().equals(categoriaSeleccionada.trim(), ignoreCase = true) ||
-                    (categoriaSeleccionada.lowercase().contains("mamif") && animal.categoria.lowercase().contains("mamif"))
+
+    }
+
+    private fun cargarDatosDesdeRoom() {
+        lifecycleScope.launch {
+            // Leemos todos los animales guardados en Room
+            val todosLosAnimales = dao.obtenerTodasAnimales()
+
+            // Filtramos la lista comparando la especie/categoría
+            val animalesFiltrados = todosLosAnimales.filter { animal ->
+                animal.especie.trim().equals(categoriaSeleccionada.trim(), ignoreCase = true) ||
+                        (categoriaSeleccionada.lowercase()
+                            .contains("mamif") && animal.especie.lowercase().contains("mamif"))
+            }
+
+            // Actualizamos la lista en el adaptador
+            adapter.actualizarLista(animalesFiltrados)
         }
+    }
 
-        //instanciamos y asignamos el adaptador actualizado con los animales filtrados
-        adapter = AnimalAdapter(animalesFiltrados)
-        rvAnimales.adapter = adapter
+    // Método para BORRAR de Room
+    private fun borrarAnimal(animal: Animales) {
+        lifecycleScope.launch {
+            dao.borrarAnimal(animal) // Borra la fila en SQLite
+            cargarDatosDesdeRoom() // Recarga la lista en pantalla
+        }
     }
 }

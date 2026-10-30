@@ -37,5 +37,14 @@
         android:layout_height="wrap_content"
         android:text="🔊"
         android:textSize="24sp" />
+    <!-- icono para borrar -->
+    <TextView
+        android:id="@+id/txtIconoBorrar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:padding="6dp"
+        android:text="🗑️"
+        android:textSize="22sp" />
 
 </LinearLayout>

@@ -9,7 +9,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import android.net.Uri
 
-class AnimalAdapter(private val listaAnimales: List<Animal>) :
+//Callback para avisar al MainActivity cuando borrar (private val onBorrarClick: (Animal) -> Unit)
+class AnimalAdapter(
+    private var listaAnimales: List<Animales>,
+    private val onBorrarClick: (Animales) -> Unit
+) :
     RecyclerView.Adapter<AnimalAdapter.AnimalViewHolder>() {
 
     //Guardamos la referencia al MediaPlayer para detener sonidos anteriores
@@ -21,6 +25,7 @@ class AnimalAdapter(private val listaAnimales: List<Animal>) :
         val imgAnimal: ImageView = itemView.findViewById(R.id.imgAnimalFila)
         val txtNombre: TextView = itemView.findViewById(R.id.txtNombreFila)
         val txtIconoSonido: TextView = itemView.findViewById(R.id.txtIconoSonido)
+        val txtIconoBorrar: TextView = itemView.findViewById(R.id.txtIconoBorrar)
     }
 
     //
@@ -41,9 +46,9 @@ class AnimalAdapter(private val listaAnimales: List<Animal>) :
         //gestionamos el URI del dispositivo con protecciones y recursos
         //locales como respaldo
 
-        if (!animal.uriImagen.isNullOrEmpty()) {
+        if (!animal.rutaImagen.isNullOrEmpty()) {
             try {
-                val uri = Uri.parse(animal.uriImagen)
+                val uri = Uri.parse(animal.rutaImagen)
                 holder.imgAnimal.setImageURI(uri)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -57,13 +62,10 @@ class AnimalAdapter(private val listaAnimales: List<Animal>) :
         }
 
         //2.MOSTRAMOS U OCULTAMOS EL ICONO DE SONIDO DEL NUEVO ANIMAL AÑADIDO (ES OPCIONAL)
-        val tieneSonido = (animal.idSonido != null && animal.idSonido != 0) || !animal.uriSonido.isNullOrEmpty()
+        val tieneSonido =
+            (animal.idSonido != null && animal.idSonido != 0) || !animal.rutaAudio.isNullOrEmpty()
+        holder.txtIconoSonido.visibility = if (tieneSonido) View.VISIBLE else View.GONE
 
-        if (tieneSonido) {
-            holder.txtIconoSonido.visibility = View.VISIBLE
-        } else {
-            holder.txtIconoSonido.visibility = View.GONE
-        }
 
         // 3.LISTENER para la reproducción del audio
         //solo al pulsar el icono del altavoz
@@ -77,9 +79,9 @@ class AnimalAdapter(private val listaAnimales: List<Animal>) :
                 val contexto = holder.itemView.context
 
                 //reproducimos audios desde la memoria del teléfono ( externo, URI)
-                if (!animal.uriSonido.isNullOrEmpty()) {
+                if (!animal.rutaAudio.isNullOrEmpty()) {
                     mediaPlayerActual = MediaPlayer().apply {
-                        setDataSource(contexto, Uri.parse(animal.uriSonido))
+                        setDataSource(contexto, Uri.parse(animal.rutaAudio))
                         prepare()
                         start()
                     }
@@ -99,8 +101,26 @@ class AnimalAdapter(private val listaAnimales: List<Animal>) :
                 e.printStackTrace()
             }
         }
+        //LISTENER para borrar
+        //1. Al pulsar la papelera 🗑️ de la fila
+        holder.txtIconoBorrar.setOnClickListener {
+            onBorrarClick(animal)
+        }
+
+        //2. Al dejar pulsada la fila entera
+        holder.itemView.setOnLongClickListener {
+            onBorrarClick(animal)
+            true
+        }
     }
 
     //devolvemos el núemro total de elementos a mostrar en la lista
     override fun getItemCount(): Int = listaAnimales.size
+
+    // Método para recargar la lista cuando cambien los datos en Room
+    fun actualizarLista(nuevaLista: List<Animales>) { // Debe ser List<Animales>
+        this.listaAnimales = nuevaLista
+        notifyDataSetChanged()
+    }
+
 }

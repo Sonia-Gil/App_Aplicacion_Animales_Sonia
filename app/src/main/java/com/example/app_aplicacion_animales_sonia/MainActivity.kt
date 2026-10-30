@@ -3,15 +3,33 @@ package com.example.app_aplicacion_animales_sonia
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    // Instancia de tu DAO para acceder a Room
+    private lateinit var dao: AnimalesDAO
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)//aqui conectamos archivo con el cod kotlin con xml
         setContentView(R.layout.activity_main)//aqui se vincula la actividad con su interfaz XML
-
+        /*
         //carga la lista guardada en SharedPreferences, o los datos por defecto
         AlmacenAnimales.cargarDatos(this)
+        */
+
+        // Inicializamos la base de datos de Room, sustituimos el SharedPreferences, por esto
+        dao = AppDatabase.obtener(this).animalesDao()
+
+        // Carga inicial opcional: Si la BD está vacía, insertamos animales por defecto
+        lifecycleScope.launch {
+            if (dao.obtenerTodasAnimales().isEmpty()) {
+                guardarDatosIniciales()
+            }
+        }
 
         //1. Enganchamos lso botones del XML mediante su ID a las variables de kotlin
         val btnMamiferos = findViewById<Button>(R.id.btnMamiferos)
@@ -53,5 +71,51 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
+    //Añadimos un método de comprobación/ ejemplo del ROOM
+    //para insertar un animal con imagen y audio desde aquí o desde otra pantalla
+    private fun guardarAnimalesEjemplo(
+        nombre: String,
+        especie: String,
+        rutaImagen: String?,
+        rutaAudio: String?
+    ) {
+        lifecycleScope.launch {
+            val nuevoAnimal = Animales(
+                nombre = nombre,
+                especie = especie,
+                rutaImagen = rutaImagen,
+                rutaAudio = rutaAudio
+            )
+            dao.insertarAnimal(nuevoAnimal)
+        }
+    }
+
+    // Carga inicial solo si la BD está vacía
+    private suspend fun guardarDatosIniciales() {
+        dao.insertarAnimal(
+            Animales(
+                nombre = "Perro",
+                especie = "Mamíferos",
+                rutaImagen = null,
+                rutaAudio = null
+            )
+        )
+        dao.insertarAnimal(
+            Animales(
+                nombre = "Pato",
+                especie = "Aves",
+                rutaImagen = null,
+                rutaAudio = null
+            )
+        )
+        dao.insertarAnimal(
+            Animales(
+                nombre = "Payaso",
+                especie = "Peces",
+                rutaImagen = null,
+                rutaAudio = null
+            )
+        )
+    }
 
 }

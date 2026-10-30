@@ -9,6 +9,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import androidx.activity.ComponentActivity
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -134,24 +136,28 @@ class AgregarAnimalActivity : ComponentActivity() {
                     }
                 }
 
-                val nuevoAnimal = Animal(
-                    nombre = nombre,
-                    categoria = categoria,
-                    uriImagen = uriImagenSeleccionada,
-                    idImagen = idImagenFinal,
-                    uriSonido = uriSonidoSeleccionado,
-                    idSonido = idSonidoFinal
-                )
+                // --- AQUÍ GUARDAMOS DIRECTAMENTE EN ROOM ---
+                val dao = AppDatabase.obtener(this).animalesDao()
+                lifecycleScope.launch {
+                    val animalRoom = Animales(
+                        nombre = nombre,
+                        especie = categoria,
+                        rutaImagen = uriImagenSeleccionada,
+                        rutaAudio = uriSonidoSeleccionado,
+                        idImagen = idImagenFinal,
+                        idSonido = idSonidoFinal
+                    )
+                    dao.insertarAnimal(animalRoom)
 
-                //1. añadimos el animal a la lista local
-                AlmacenAnimales.listaAnimales.add(nuevoAnimal)
-
-                //2. guardamos permanentemente en SharedPreferences
-                AlmacenAnimales.guardarDatos(this)
-
-                Toast.makeText(this, "¡Animal guardado con éxito!", Toast.LENGTH_SHORT).show()
-                finish()
+                    Toast.makeText(
+                        this@AgregarAnimalActivity,
+                        "¡Animal guardado con éxito!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    finish()
+                }
             }
         }
+
     }
 }
