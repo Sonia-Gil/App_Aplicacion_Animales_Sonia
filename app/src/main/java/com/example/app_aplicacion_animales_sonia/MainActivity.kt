@@ -24,9 +24,15 @@ class MainActivity : AppCompatActivity() {
         // Inicializamos la base de datos de Room, sustituimos el SharedPreferences, por esto
         dao = AppDatabase.obtener(this).animalesDao()
 
-        // Carga inicial opcional: Si la BD está vacía, insertamos animales por defecto
+        // Carga inicial: Si la BD está vacía o tenía los datos incompletos de pruebas anteriores, insertamos la lista por defecto completa de Animal.kt
         lifecycleScope.launch {
-            if (dao.obtenerTodasAnimales().isEmpty()) {
+            val todos = dao.obtenerTodasAnimales()
+            val nombres = todos.map { it.nombre }
+            if (todos.isEmpty() || !nombres.contains("León")) {
+                // Borramos registros viejos de prueba si existían
+                for (animalViejo in todos) {
+                    dao.borrarAnimal(animalViejo)
+                }
                 guardarDatosIniciales()
             }
         }
@@ -90,30 +96,62 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Carga inicial solo si la BD está vacía
+    // Carga inicial de todos los animales por defecto de Animal.kt si la BD está vacía
     private suspend fun guardarDatosIniciales() {
+        dao.insertarAnimal(
+            Animales(
+                nombre = "León",
+                especie = "Mamíferos",
+                idImagen = R.drawable.leon,
+                idSonido = R.raw.sonido_leon
+            )
+        )
+        dao.insertarAnimal(
+            Animales(
+                nombre = "Elefante",
+                especie = "Mamíferos",
+                idImagen = R.drawable.elefante,
+                idSonido = R.raw.sonido_elefante
+            )
+        )
         dao.insertarAnimal(
             Animales(
                 nombre = "Perro",
                 especie = "Mamíferos",
-                rutaImagen = null,
-                rutaAudio = null
+                idImagen = R.drawable.perro,
+                idSonido = R.raw.sonido_perro
+            )
+        )
+        dao.insertarAnimal(
+            Animales(
+                nombre = "Loro",
+                especie = "Aves",
+                idImagen = R.drawable.loro,
+                idSonido = R.raw.sonido_loro
             )
         )
         dao.insertarAnimal(
             Animales(
                 nombre = "Pato",
                 especie = "Aves",
-                rutaImagen = null,
-                rutaAudio = null
+                idImagen = R.drawable.pato,
+                idSonido = R.raw.sonido_pato
             )
         )
         dao.insertarAnimal(
             Animales(
-                nombre = "Payaso",
+                nombre = "Águila",
+                especie = "Aves",
+                idImagen = R.drawable.aguila,
+                idSonido = R.raw.sonido_aguila
+            )
+        )
+        dao.insertarAnimal(
+            Animales(
+                nombre = "Pez Payaso",
                 especie = "Peces",
-                rutaImagen = null,
-                rutaAudio = null
+                idImagen = R.drawable.pato,
+                idSonido = null
             )
         )
     }
