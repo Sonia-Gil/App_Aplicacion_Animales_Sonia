@@ -14,5 +14,8 @@ data class Animales(
     val rutaImagen: String? = null, // Para fotos de la galería, capturas o cámara (URI)
     val rutaAudio: String? = null,  // Para audios grabados o seleccionados del teléfono (URI)
     val idImagen: Int? = null,      // Para fotos locales integradas (ej. R.drawable.pato)
-    val idSonido: Int? = null       // Para audios locales integrados (ej. R.raw.sonido)
+    val idSonido: Int? = null,      // Para audios locales integrados (ej. R.raw.sonido)
+    val latitud: Double? = null, //para la latitud
+    val longitud: Double? = null,//para la longitud
+    val fotoPath: String? = null //pra las fotos
 )

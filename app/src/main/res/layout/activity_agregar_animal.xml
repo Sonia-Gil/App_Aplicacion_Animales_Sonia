@@ -47,12 +47,20 @@
         android:maxLines="1"
         android:imeOptions="actionNext" />
 
+    <!-- botón para hacer foto con la cámara -->
+    <Button
+        android:id="@+id/btnTomarFotoCamara"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Tomar foto con la Cámara" />
+
     <!-- botón para elegir foto de la galería -->
     <Button
         android:id="@+id/btnSeleccionarFoto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:text="O elegir foto de la galería" />
 
     <!-- vista previa de la foto -->
@@ -92,6 +100,24 @@
         android:visibility="gone"
         android:layout_gravity="center"
         android:layout_marginTop="8dp" />
+
+    <!-- Botón y TextView para Ubicación GPS -->
+    <Button
+        android:id="@+id/btnUbicacion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="📍 Obtener Ubicación GPS" />
+
+    <TextView
+        android:id="@+id/tvUbicacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Ubicación no obtenida"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <!-- botón de guardar -->
     <Button

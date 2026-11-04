@@ -10,6 +10,9 @@ data class Avistamientos(
     val especie: String,
     val rutaImagen: String? = null, // Guarda la Uri o path local de la imagen
     val rutaAudio: String? = null,    // Guarda la Uri o path local del audio
+    val latitud: Double? = null, //para la latitud
+    val longitud: Double? = null,//para la longitud
+    val fotoPath: String? = null,//pra las fotos
     val fecha: String,
     val lugar: String
 )

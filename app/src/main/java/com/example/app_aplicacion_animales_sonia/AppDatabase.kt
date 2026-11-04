@@ -5,9 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Animales::class, Avistamientos::class], version = 1)
+@Database(entities = [Animales::class, Avistamientos::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun animalesDao(): AnimalesDAO
+
 
 
     companion object {
@@ -20,7 +21,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "animales_base_de_datos"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration(true)
+                    .build()
                 instancia = nueva
                 nueva
             }

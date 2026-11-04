@@ -43,22 +43,27 @@ class AnimalAdapter(
         holder.imgAnimal.setImageDrawable(null)
 
         //1.CARGA DE IMAGEN
-        //gestionamos el URI del dispositivo con protecciones y recursos
-        //locales como respaldo
-
-        if (!animal.rutaImagen.isNullOrEmpty()) {
+        //Comprobamos primero si hay foto creada con cámara/galería en fotoPath
+        val bitmap = Fotos.cargar(animal.fotoPath)
+        if (bitmap != null) {
+            holder.imgAnimal.setImageBitmap(bitmap)
+            holder.imgAnimal.visibility = View.VISIBLE
+        } else if (!animal.rutaImagen.isNullOrEmpty()) {
             try {
                 val uri = Uri.parse(animal.rutaImagen)
                 holder.imgAnimal.setImageURI(uri)
+                holder.imgAnimal.visibility = View.VISIBLE
             } catch (e: Exception) {
                 e.printStackTrace()
-                //si la Uri externa da error de permisos, ponemos la foto por defecto
                 holder.imgAnimal.setImageResource(animal.idImagen ?: R.drawable.pato)
+                holder.imgAnimal.visibility = View.VISIBLE
             }
         } else if (animal.idImagen != null) {
             holder.imgAnimal.setImageResource(animal.idImagen)
+            holder.imgAnimal.visibility = View.VISIBLE
         } else {
             holder.imgAnimal.setImageResource(R.drawable.pato)
+            holder.imgAnimal.visibility = View.VISIBLE
         }
 
         //2.MOSTRAMOS U OCULTAMOS EL ICONO DE SONIDO DEL NUEVO ANIMAL AÑADIDO (ES OPCIONAL)
